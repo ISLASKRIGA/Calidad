@@ -54,6 +54,7 @@ def process_excel():
         print("No se encontraron credenciales de Google. Se saltará la descarga y se procesará el Excel local si existe.")
         credentials_info = None
 
+    is_real_time = False
     # Si tenemos credenciales, descargamos la versión más reciente de Drive
     if credentials_info:
         try:
@@ -62,15 +63,36 @@ def process_excel():
             with open('Base de Datos SUG.xlsx', 'wb') as f:
                 f.write(excel_data.getvalue())
             excel_data.seek(0)
+            is_real_time = True
         except Exception as e:
             print("Error al descargar de Google Drive:", e)
             print("Se intentará leer el archivo Excel local de respaldo...")
             excel_data = 'Base de Datos SUG.xlsx'
+            is_real_time = False
     else:
         excel_data = 'Base de Datos SUG.xlsx'
+        is_real_time = False
 
     # Leer la hoja de Excel
     try:
+        # Verificar si el archivo local existe cuando excel_data es una ruta
+        if isinstance(excel_data, str) and not os.path.exists(excel_data):
+            print(f"El archivo Excel local '{excel_data}' no existe.")
+            frontend_dir = os.path.join('sug-dashboard', 'src')
+            if os.path.exists('data.json') or os.path.exists(os.path.join(frontend_dir, 'data.json')):
+                print("Se encontró un data.json previo. Manteniendo los datos existentes y marcando como no tiempo real.")
+                sync_status = {
+                    "isRealTime": False
+                }
+                with open('sync_status.json', 'w', encoding='utf-8') as f:
+                    json.dump(sync_status, f, ensure_ascii=False, indent=2)
+                os.makedirs(frontend_dir, exist_ok=True)
+                with open(os.path.join(frontend_dir, 'sync_status.json'), 'w', encoding='utf-8') as f:
+                    json.dump(sync_status, f, ensure_ascii=False, indent=2)
+                return
+            else:
+                raise FileNotFoundError(f"No se encontró '{excel_data}' ni data.json existente.")
+
         xl = pd.ExcelFile(excel_data)
         df = xl.parse(xl.sheet_names[0])
         
@@ -106,7 +128,17 @@ def process_excel():
         with open(os.path.join(frontend_dir, 'data.json'), 'w', encoding='utf-8') as f:
             json.dump(clean_records, f, ensure_ascii=False, indent=2, default=str)
             
-        print("Data processed successfully. Exported to data.json in root and frontend.")
+        # Exportar estado de sincronización
+        sync_status = {
+            "isRealTime": is_real_time
+        }
+        with open('sync_status.json', 'w', encoding='utf-8') as f:
+            json.dump(sync_status, f, ensure_ascii=False, indent=2)
+            
+        with open(os.path.join(frontend_dir, 'sync_status.json'), 'w', encoding='utf-8') as f:
+            json.dump(sync_status, f, ensure_ascii=False, indent=2)
+            
+        print(f"Data processed successfully (isRealTime: {is_real_time}). Exported files.")
         
     except Exception as e:
         print("Error processing Excel:", e)

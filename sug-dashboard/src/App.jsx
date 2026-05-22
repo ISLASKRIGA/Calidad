@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import { LayoutDashboard, MessageSquareWarning, Smile, Lightbulb, CheckCircle2 } from 'lucide-react';
 import rawData from './data.json';
+import syncStatus from './sync_status.json';
 
 const COLORS = ['#58cc02', '#1cb0f6', '#ff4b4b', '#ff9600', '#ce82ff'];
 
@@ -113,15 +114,27 @@ export default function App() {
 
         {/* Estatus del Origen de Datos (Drive) */}
         <h3 style={{ fontSize: '14px', color: 'var(--color-hare)', textTransform: 'uppercase', marginTop: '32px' }}>Origen de Datos</h3>
-        <div className="card-3d" style={{ padding: '12px', fontSize: '13px', background: 'var(--color-snow)', borderStyle: 'dashed' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold', color: 'var(--color-green-dark)' }}>
-            <CheckCircle2 size={16} />
-            <span>Drive Sincronizado</span>
+        {syncStatus.isRealTime ? (
+          <div className="card-3d" style={{ padding: '12px', fontSize: '13px', background: 'var(--color-snow)', borderStyle: 'dashed', borderColor: 'var(--color-green)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold', color: 'var(--color-green-dark)' }}>
+              <CheckCircle2 size={16} style={{ color: 'var(--color-green)' }} />
+              <span>Drive Sincronizado</span>
+            </div>
+            <p style={{ fontSize: '11px', color: 'var(--color-hare)', margin: '8px 0 0 0', lineHeight: '1.4' }}>
+              Alimentado en tiempo real desde la API de Google Sheets.
+            </p>
           </div>
-          <p style={{ fontSize: '11px', color: 'var(--color-hare)', margin: '8px 0 0 0', lineHeight: '1.4' }}>
-            Alimentado en tiempo real desde la API de Google Sheets.
-          </p>
-        </div>
+        ) : (
+          <div className="card-3d" style={{ padding: '12px', fontSize: '13px', background: 'var(--color-snow)', borderStyle: 'dashed', borderColor: 'var(--color-red)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold', color: 'var(--color-red)' }}>
+              <MessageSquareWarning size={16} />
+              <span>Modo Offline / Backup</span>
+            </div>
+            <p style={{ fontSize: '11px', color: 'var(--color-hare)', margin: '8px 0 0 0', lineHeight: '1.4' }}>
+              Mostrando copia estática. Asocia tu Cuenta de Servicio en Netlify para activar la sincronización en vivo.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Main Content */}
