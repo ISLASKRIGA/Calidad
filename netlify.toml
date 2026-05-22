@@ -1,7 +1,8 @@
 [build]
   base = "sug-dashboard"
-  command = "npm run build"
+  command = "pip install pandas openpyxl google-auth google-api-python-client && python ../process_data.py && npm run build"
   publish = "dist"
+
 
 [[redirects]]
   from = "/*"
