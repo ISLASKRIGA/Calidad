@@ -9,7 +9,8 @@ import staticRawData from './data.json';
 const COLORS = ['#58cc02', '#1cb0f6', '#ff4b4b', '#ff9600', '#ce82ff'];
 
 // Enlace de Google Sheets por defecto (opcional)
-const GOOGLE_SHEETS_CSV_URL = '';
+const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/1qntKWV5B2871JultSTKFqXiCwhTN4FmP/export?format=csv';
+
 
 // Función para parsear CSV robustamente
 function parseCSV(csvText) {
