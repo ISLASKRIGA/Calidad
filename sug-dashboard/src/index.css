@@ -266,3 +266,76 @@ select.btn-3d {
   animation: spin 1s linear infinite;
 }
 
+/* Responsividad para móviles y tabletas */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 2px solid var(--color-swan);
+    padding: 16px;
+    box-sizing: border-box;
+    gap: 12px;
+  }
+
+  /* Ajustar margen del logo en el sidebar en móvil */
+  .sidebar > div:first-child {
+    margin-bottom: 16px !important;
+  }
+
+  .main-content {
+    padding: 16px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    padding: 12px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+  }
+
+  .stat-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .stat-content h3 {
+    font-size: 11px;
+  }
+
+  .stat-content .value {
+    font-size: 20px;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .card-3d {
+    padding: 16px;
+  }
+
+  .chart-container {
+    height: 240px;
+  }
+
+  table th, table td {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+
+
